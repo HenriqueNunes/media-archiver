@@ -26,9 +26,13 @@ namespace MediaArchiver
 
         public static string CalculateHash(string fileName)
         {
-            var dataBytes = File.ReadAllBytes(fileName);
-            var hasher = SHA256.Create();
-            var hashValue = hasher.ComputeHash(dataBytes);
+            byte[] hashValue;
+            using (var hasher = SHA256.Create())
+            using (var fileStrm = File.OpenRead(fileName))
+            {
+                fileStrm.Position = 0;
+                hashValue = hasher.ComputeHash(fileStrm);
+            }
             //Console.WriteLine(new BigInteger(hashValue));
             return Convert.ToBase64String(hashValue);
         }

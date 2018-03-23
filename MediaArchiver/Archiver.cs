@@ -59,22 +59,22 @@ namespace MediaArchiver
             var filesToCheck = Directory.EnumerateFiles(Source, "*.*", SearchOption.AllDirectories)
                                         .Where(fn => !Path.GetFileName(fn).StartsWith(".", StringComparison.InvariantCultureIgnoreCase));
 
-            progressReport.TotalFiles = filesToCheck.Count();
-
             foreach (var fn in filesToCheck)
             {
+                var fInfo = new FileInfo(fn);
+
                 var fileExtension = Path.GetExtension(fn).ToLowerInvariant();
                 if (ValidImageExtensions.Contains(fileExtension))
                 {
-                    progressReport.TotalImageFiles++;
+                    progressReport.SignalImageFile(fInfo.Length);
                 }
                 else if (ValidVideoExtensions.Contains(fileExtension))
                 {
-                    progressReport.TotalVideoFiles++;
+                    progressReport.SignalVideoFile(fInfo.Length);
                 }
                 else
                 {
-                    progressReport.TotalOtherFiles++;
+                    progressReport.SignalOtherFile(fInfo.Length);
                 }
             }
 
@@ -89,26 +89,35 @@ namespace MediaArchiver
             stopWatch.Start();
             var progressReport = new CountReport() { TotalElapsedTime = stopWatch.Elapsed };
 
-            progressReport.TotalFiles = Directory.EnumerateFiles(Destination, "*.*", SearchOption.AllDirectories)
-                                                .Count(fn => !Path.GetFileName(fn).StartsWith(".", StringComparison.InvariantCultureIgnoreCase));
+            //progressReport.TotalFiles = Directory.EnumerateFiles(Destination, "*.*", SearchOption.AllDirectories)
+            //.Count(fn => !Path.GetFileName(fn).StartsWith(".", StringComparison.InvariantCultureIgnoreCase));
 
-            var filesToCheck = Directory.EnumerateFiles(Destination, "[arc]*.*", SearchOption.AllDirectories);
+            //var filesToCheck = Directory.EnumerateFiles(Destination, "[arc]*.*", SearchOption.AllDirectories);
+            var filesToCheck = Directory.EnumerateFiles(Destination, "*.*", SearchOption.AllDirectories)
+                                        .Where(fn => !Path.GetFileName(fn).StartsWith(".", StringComparison.InvariantCultureIgnoreCase));
 
             foreach (var fn in filesToCheck)
             {
-                progressReport.TotalValidFiles++;
+                var fInfo = new FileInfo(fn);
+
+                if (!Path.GetFileName(fn).StartsWith("[arc]", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    progressReport.SignalNonValidFile(fInfo.Length);
+                    continue;
+                }
+
                 var fileExtension = Path.GetExtension(fn).ToLowerInvariant();
                 if (ValidImageExtensions.Contains(fileExtension))
                 {
-                    progressReport.TotalImageFiles++;
+                    progressReport.SignalImageFile(fInfo.Length);
                 }
                 else if (ValidVideoExtensions.Contains(fileExtension))
                 {
-                    progressReport.TotalVideoFiles++;
+                    progressReport.SignalVideoFile(fInfo.Length);
                 }
                 else
                 {
-                    progressReport.TotalOtherFiles++;
+                    progressReport.SignalOtherFile(fInfo.Length);
                 }
             }
 
@@ -183,12 +192,28 @@ namespace MediaArchiver
                 var srcHash = FileProcessor.CalculateHash(srcFile);
                 var srcHashFileSafe = FileProcessor.MakeFileNameSafeHash(srcHash);
 
-                var estimatedFileDate = fInfo.CreationTime;
-                if (ValidImageExtensions.Contains(Path.GetExtension(srcFile)))
+                var fileExtension = Path.GetExtension(srcFile).ToLowerInvariant();
+
+
+                var estimatedFileDate = fInfo.CreationTime.Year <= 1970 ? fInfo.LastWriteTime : fInfo.CreationTime;
+
+                if (estimatedFileDate.Year <= 1980 || (estimatedFileDate > DateTime.Now.AddDays(1)))
+                {
+                    var ddd = fInfo.LastWriteTime;
+                    var zzz = ddd;
+                }
+
+                //if (fInfo.CreationTime.Year <= 1980)
+                //{
+                //    var xx = "";
+                //}
+
+                if (ValidImageExtensions.Any(ext => ext.Equals(fileExtension, StringComparison.InvariantCultureIgnoreCase)))
                 {
                     var dt = GetBestDateForImage(srcFile);
                     if (dt.HasValue) estimatedFileDate = dt.Value;
                 }
+
 
                 var destFile = FindFileInDestination(srcHashFileSafe);
                 //if (destFile != null && srcHash != FileProcessor.CalculateHash(destFile.FullName))
@@ -202,7 +227,6 @@ namespace MediaArchiver
                 }
                 else
                 {
-                    var fileExtension = Path.GetExtension(srcFile).ToLowerInvariant();
                     var isImage = ValidImageExtensions.Contains(fileExtension);
                     var isVideo = ValidVideoExtensions.Contains(fileExtension);
 
@@ -210,7 +234,7 @@ namespace MediaArchiver
                     if (options.HasFlag(ArchiveOptionsEnum.UseInboxFolder)) { destFolder = Path.Combine(destFolder, "inbox"); }
                     if (options.HasFlag(ArchiveOptionsEnum.KeepSourceStructure))
                     {
-                     destFolder=   Path.Combine(destFolder, Path.GetDirectoryName(Path.GetRelativePath(Source, srcFile)));
+                        destFolder = Path.Combine(destFolder, Path.GetDirectoryName(Path.GetRelativePath(Source, srcFile)));
                     }
                     else
                     {

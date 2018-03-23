@@ -27,7 +27,7 @@ namespace MediaArchiver
             //var abort = true;
             //if (abort) return;
 
-            var task = ExecutionTaskEnum.Archive;
+            var task = ExecutionTaskEnum.CountSourceItems;
             //var sourceRootFolder = @"/users/hnunes/downloads/[NO.BACKUPS!]/TP001/test-source";
             //var destinationRootFolder = @"/users/hnunes/downloads/[NO.BACKUPS!]/TP001/test-destination";
 
@@ -36,6 +36,7 @@ namespace MediaArchiver
             //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/Teste";
 
 
+            //***************************
 
             var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/Fotos.100CANON";
             //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/Fotos.Tmp/100CANON-tmp";
