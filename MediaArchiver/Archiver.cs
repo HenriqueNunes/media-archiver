@@ -36,7 +36,7 @@ namespace MediaArchiver
         private Archiver()
         {
             ValidImageExtensions = new List<string> { ".jpg", ".jpeg", ".png" };
-            ValidVideoExtensions = new List<string> { ".mov", ".mpeg", ".avi", ".mkv", ".m4v" };
+            ValidVideoExtensions = new List<string> { ".mov", ".mpeg", ".avi", ".mkv", ".m4v", ".mpg" };
         }
 
         private Archiver(string source, string destination) : this()
@@ -74,7 +74,7 @@ namespace MediaArchiver
                 }
                 else
                 {
-                    progressReport.SignalOtherFile(fInfo.Length);
+                    progressReport.SignalOtherFile(fInfo.Length, fileExtension);
                 }
             }
 
@@ -117,7 +117,7 @@ namespace MediaArchiver
                 }
                 else
                 {
-                    progressReport.SignalOtherFile(fInfo.Length);
+                    progressReport.SignalOtherFile(fInfo.Length, fileExtension);
                 }
             }
 

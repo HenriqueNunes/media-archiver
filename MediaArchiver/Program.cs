@@ -27,7 +27,7 @@ namespace MediaArchiver
             //var abort = true;
             //if (abort) return;
 
-            var task = ExecutionTaskEnum.CountSourceItems;
+            var task = ExecutionTaskEnum.Archive;
             //var sourceRootFolder = @"/users/hnunes/downloads/[NO.BACKUPS!]/TP001/test-source";
             //var destinationRootFolder = @"/users/hnunes/downloads/[NO.BACKUPS!]/TP001/test-destination";
 
@@ -38,9 +38,19 @@ namespace MediaArchiver
 
             //***************************
 
-            var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/Fotos.100CANON";
             //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/Fotos.Tmp/100CANON-tmp";
+            //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/Fotos.100CANON";
+            //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/[Fotos]/[Fotos].AXX.Fotos/Fotografias";
+            //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/[Fotos]/[Fotos].AXX.Fotos/Fotos";
+            //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/[Fotos]/[Fotos].AXX.Fotos/F.Movies";
+            //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/[Fotos]";
+            //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/Fotos.Tmp";
+            //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/Teste";
+            //var sourceRootFolder = @"/Volumes/Casa-001/Fotos.Tmp";
+            //var sourceRootFolder = @"/Volumes/Casa-001/[Fotos]";
+            var sourceRootFolder = @"/Volumes/Casa-001/Fotos.100CANON";
             var destinationRootFolder = @"/Volumes/ex-PS4/[archive]";
+            //[Fotos].AXX.Fotos
 
             var nonArcFiles = Directory.EnumerateFiles(destinationRootFolder, "*.*", SearchOption.AllDirectories).Where(fn => !Path.GetFileName(fn).StartsWith(".", StringComparison.InvariantCultureIgnoreCase));
             foreach (var item in nonArcFiles)
@@ -53,6 +63,9 @@ namespace MediaArchiver
 
             var archiver = Archiver.CreateArchiver(source: sourceRootFolder, destination: destinationRootFolder);
 
+            Logger.Log($"[source: {archiver.Source}]");
+            Logger.Log($"[destination: {archiver.Destination}]");
+            Logger.Log($"[task: {task.ToString()}] [options: {options.ToString()}]");
             switch (task)
             {
                 case ExecutionTaskEnum.CountSourceItems:
