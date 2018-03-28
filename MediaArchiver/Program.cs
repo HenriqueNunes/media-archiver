@@ -38,7 +38,6 @@ namespace MediaArchiver
 
             //***************************
 
-
             //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/Fotos.Tmp/100CANON-tmp";
             //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/Fotos.100CANON";
             //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/[Fotos]/[Fotos].AXX.Fotos/Fotografias";
