@@ -35,7 +35,6 @@ namespace MediaArchiver
             //var sourceRootFolder = @"/users/hnunes/downloads/[NO.BACKUPS!]/100CANON";
             //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/Teste";
 
-
             //***************************
 
             //var sourceRootFolder = @"/Volumes/SAMSUNG 1TB/Fotos.Tmp/100CANON-tmp";
