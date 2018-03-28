@@ -49,7 +49,6 @@ namespace MediaArchiver
             //var sourceRootFolder = @"/Volumes/Casa-001/Fotos.Tmp";
             //var sourceRootFolder = @"/Volumes/Casa-001/[Fotos]";
 
-
             var sourceRootFolder = @"/Volumes/Casa-001/Fotos.100CANON";
             var destinationRootFolder = @"/Volumes/ex-PS4/[archive]";
             //[Fotos].AXX.Fotos
